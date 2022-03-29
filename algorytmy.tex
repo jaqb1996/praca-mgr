@@ -341,7 +341,7 @@ Filtr dla szumu nieaddytywnego (do zweryfikowania):
 	&\bar{\boldsymbol{P}_t}=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)}(\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}_t})(\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}_t})^T
 	\end{align}
 	\item[$\circ$] Krok korekcji:\\
-	Tutaj podobnie jak w kroku predykcji, $\boldsymbol{\xi}_{(i_1, \dots, i_n)}$ tworzone będzie na podstawie zwiększonej liczby wymiarów (suma wymiarów zmiennych stanu i~wektora szumu $\boldsymbol{r}$). $\bar{\boldsymbol{P}_t}$ będzie miało dołożoną macierz $\boldsymbol{R}_{t}$. $\bar{\boldsymbol{m}}_{t}$ będzie też uzupełnione zerami. Funkcja $\boldsymbol{h}$ przyjmie współrzędne węzłów odpowiadające i zmiennym stanu i szumom:
+	Tutaj podobnie jak w kroku predykcji, $\boldsymbol{\xi}_{(i_1, \dots, i_n)}$ tworzone będzie na podstawie zwiększonej liczby wymiarów (suma wymiarów zmiennych stanu i~wektora szumu $\boldsymbol{r}$). $\bar{\boldsymbol{P}_t}$ będzie miało dołożoną macierz $\boldsymbol{R}_{t}$. $\bar{\boldsymbol{m}}_{t}$ będzie też uzupełnione zerami. Funkcja $\boldsymbol{h}$ przyjmie współrzędne węzłów odpowiadające i zmiennym stanu, i szumom:
 	\begin{align} \label{eq:GHKFNonAdditiveCorrection}
 	&\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} = \bar{\boldsymbol{m}}_{t} + \sqrt{\bar{\boldsymbol{P}}_{t}} \boldsymbol{\xi}_{(i_1, \dots, i_n)} \nonumber \\
 	&\hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} = \boldsymbol{h}(\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t}) \nonumber \\
