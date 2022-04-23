@@ -1,7 +1,7 @@
 \chapter{Algorytmy filtracji}
 %Przegląd wybranych algorytmów filtracji
 \label{cha:algorytmy}
-Termin \textit{filtracja optymalna} odnosi się do zestawu metod, które mogą być używane do estymacji stanu systemu zmiennego w~czasie. Stan systemu odnosi się do zbioru zmiennych, takich jak położenie, prędkość lub orientacja, które w~pełni opisują badany system. Stan ten może być pośrednio obserwowany poprzez pomiary obarczone szumem, którego obecność oznacza, że obserwacje są niepewne; nawet w przypadku znajomości prawdziwego stanu systemu nie byłyby one jego deterministycznymi funkcjami, ale posiadały jedynie pewien rozkład możliwych wartości. Zmienność systemu w~czasie jest modelowana jako system dynamiczny, który jest zaburzany pewnym szumem procesu. Szum ten jest używany do modelowania niepewności w~dynamice systemu. W~zdecydowanej większości przypadków zachowanie obiektu nie jest prawdziwie, wewnętrznie losowe, ale w~celu przedstawienia niepewności modelu używany jest aparat matematyczny teorii prawdopodobieństwa.\par
+Termin \textit{filtracja optymalna} odnosi się do zestawu metod, które mogą być używane do estymacji stanu systemu dynamicznego zmiennego w~czasie. Stan systemu odnosi się do zbioru zmiennych, takich jak położenie, prędkość lub orientacja, które w~pełni opisują badany system. Stan ten może być pośrednio obserwowany poprzez pomiary obarczone szumem, którego obecność oznacza, że obserwacje są niepewne; nawet w przypadku znajomości prawdziwego stanu systemu nie byłyby one jego deterministycznymi funkcjami, ale posiadały jedynie pewien rozkład możliwych wartości. Zmienność systemu w~czasie jest modelowana jako system dynamiczny, który jest zaburzany pewnym szumem procesu. Szum ten jest używany do modelowania niepewności w~dynamice systemu. W~zdecydowanej większości przypadków wykorzystanie teorii prawdopodobieństwa wynika z~braku pełnej wiedzy o~systemie dynamicznym, a~nie z~jego wewnętrznej stochastycznej natury. \par
 
 Zadanie filtracji optymalnej można zaklasyfikować jako problem inwersji statystycznej, gdzie nieznaną wielkością jest wektorowy szereg czasowy $\{\boldsymbol{x_0}, \boldsymbol{x_1}, \boldsymbol{x_2}, \dots\}$ obserwowany poprzez zbiór zaszumionych pomiarów $\{\boldsymbol{z_1}, \boldsymbol{z_2}, \boldsymbol{z_3}, \dots\}$, przy obecności sygnałów sterujących $\{\boldsymbol{u_1}, \boldsymbol{u_2}, \boldsymbol{u_3}, \dots\}$ Celem wspomnianej inwersji statystycznej jest oszacowanie ukrytych stanów $\boldsymbol{x_{0:T}}=\{\boldsymbol{x_0}, \dots, \boldsymbol{x_T}\}$ na podstawie pomiarów $\boldsymbol{z_{1:T}}=\{\boldsymbol{z_1}, \dots, \boldsymbol{z_T}\}$ i~dostarczanych sygnałów sterujących $\boldsymbol{u_{1:T}}=\{\boldsymbol{u_1}, \dots, \boldsymbol{u_T}\}$. W sensie statystyki bayesowskiej celem jest obliczenie rozkładu łącznego a posteriori wszystkich stanów przy znajomości wszystkich pomiarów i~sygnałów sterujących. Zasadniczo jest to możliwe poprzez proste zastosowanie twierdzenia Bayesa (\ref{eq:jointPosterior}).
 \begin{equation} \label{eq:jointPosterior}
@@ -54,18 +54,18 @@ gdzie $\eta$ to stała normalizacyjna zdefiniowana jako $\int_{}^{}p(\boldsymbol
 Przy założeniu liniowości modeli dynamicznego oraz obserwacyjnego, a~także addytywności szumów i~normalnego charakteru ich rozkładów, można znależć rozwiązanie równiania \ref{eq:recurrentCalculations} w~zwartej formie. Wspomniane modele wyglądają zatem następująco:
 \begin{align}\label{eq:KalmanModels}
         \boldsymbol{x}_t = & \boldsymbol{A}_{t-1}\boldsymbol{x}_{t-1}+\boldsymbol{B}_{t}\boldsymbol{u}_{t}+\boldsymbol{q}_{t-1} \nonumber \\
-        \boldsymbol{z}_t = & \boldsymbol{H}_{t}\boldsymbol{x}_{t}+\boldsymbol{r}_{t}
+        \boldsymbol{z}_t = & \boldsymbol{C}_{t}\boldsymbol{x}_{t}+\boldsymbol{r}_{t}
 \end{align}
-$\boldsymbol{q}_{t-1} \sim \mathcal{N}(\boldsymbol{0},\boldsymbol{Q}_{t-1})$ to szum procesu, natomiast $\boldsymbol{r}_{t} \sim \mathcal{N}(\boldsymbol{0},\boldsymbol{R}_{t})$ jest szumem pomiaru. Macierz $\boldsymbol{A}_{t-1}$ jest macierzą przejścia modelu dynamicznego, zaś przez $\boldsymbol{H}_t$ została oznaczona macierz modelu obserwacji. Modele można również przedstawić w~notacji probabilistycznej:
+$\boldsymbol{q}_{t-1} \sim \mathcal{N}(\boldsymbol{0},\boldsymbol{Q}_{t-1})$ to szum procesu, natomiast $\boldsymbol{r}_{t} \sim \mathcal{N}(\boldsymbol{0},\boldsymbol{R}_{t})$ jest szumem pomiaru. Macierz $\boldsymbol{A}_{t-1}$ jest macierzą przejścia modelu dynamicznego, zaś przez $\boldsymbol{C}_t$ została oznaczona macierz modelu obserwacji. Modele można również przedstawić w~notacji probabilistycznej:
 \begin{align}\label{eq:KalmanProbabilisticModels}
 p(\boldsymbol{x}_t|\boldsymbol{x}_{t-1},\boldsymbol{u}_t)=&\mathcal{N}(\boldsymbol{x}_t|\boldsymbol{A}_{t-1}\boldsymbol{x}_{t-1}+\boldsymbol{B}_{t}\boldsymbol{u}_{t},\boldsymbol{Q}_{t-1}) \nonumber \\
-p(\boldsymbol{z}_t|\boldsymbol{x}_{t})=&\mathcal{N}(\boldsymbol{z}_t|\boldsymbol{H}_{t}\boldsymbol{x}_{t},\boldsymbol{R}_{t})
+p(\boldsymbol{z}_t|\boldsymbol{x}_{t})=&\mathcal{N}(\boldsymbol{z}_t|\boldsymbol{C}_{t}\boldsymbol{x}_{t},\boldsymbol{R}_{t})
 \end{align}
 Działania wykonywane w~krokach predykcji i ~korekcji nie powodują zmiany rodzaju rozkładu - wszystkie otrzymywane rozkłady są normalne:
 \begin{align}\label{eq:KalmanDistributions}
 p(\boldsymbol{x}_t|\boldsymbol{z}_{1:t-1},\boldsymbol{u}_{1:t})=&\mathcal{N}(\boldsymbol{x}_t|\bar{\boldsymbol{m}_{t}},\bar{\boldsymbol{P}_{t}}) \nonumber \\
 p(\boldsymbol{x}_t|\boldsymbol{z}_{1:t},\boldsymbol{u}_{1:t})=&\mathcal{N}(\boldsymbol{x}_t|\boldsymbol{m}_{t},\boldsymbol{P}_{t}) \nonumber \\
-p(\boldsymbol{z}_t|\boldsymbol{z}_{1:t-1},\boldsymbol{u}_{1:t})=&\mathcal{N}(\boldsymbol{z}_t|\boldsymbol{H}_t\bar{\boldsymbol{m}_{t}},\boldsymbol{S}_{t})
+p(\boldsymbol{z}_t|\boldsymbol{z}_{1:t-1},\boldsymbol{u}_{1:t})=&\mathcal{N}(\boldsymbol{z}_t|\boldsymbol{C}_t\bar{\boldsymbol{m}_{t}},\boldsymbol{S}_{t})
 \end{align}
 Parametry powyższych rozkładów mogą zostać obliczone w~krokach predykcji i~korekcji filtru Kalmana:
 \begin{itemize}
@@ -76,12 +76,12 @@ Parametry powyższych rozkładów mogą zostać obliczone w~krokach predykcji i~
 	\end{align}
 	\item[$\circ$] Krok korekcji:
 	\begin{align}\label{eq:KalmanCorrectionStep}
-	\mathbf{v}_t=&\mathbf{z}_t-\mathbf{H}_t \bar{\mathbf{m}_{t}} \nonumber \\
-	\mathbf{S}_t=&\mathbf{H}_t \bar{\mathbf{P}_{t}} \mathbf{H}_t^T + \mathbf{R}_t \nonumber \\
-	\mathbf{K}_t=&\bar{\mathbf{P}_{t}} \mathbf{H}_t^T \mathbf{S}_t^{-1}\nonumber \\
+	\mathbf{v}_t=&\mathbf{z}_t-\mathbf{C}_t \bar{\mathbf{m}_{t}} \nonumber \\
+	\mathbf{S}_t=&\mathbf{C}_t \bar{\mathbf{P}_{t}} \mathbf{C}_t^T + \mathbf{R}_t \nonumber \\
+	\mathbf{K}_t=&\bar{\mathbf{P}_{t}} \mathbf{C}_t^T \mathbf{S}_t^{-1}\nonumber \\
 	\mathbf{m}_{t}=&\bar{\mathbf{m}_{t}} + \mathbf{K}_t \mathbf{v}_t\nonumber \\
 %	\mathbf{P}_{t}=&\bar{\mathbf{P}_{t}} - \mathbf{K}_t \mathbf{S}_t \mathbf{K}_t^T
-	\mathbf{P}_{t}=&(\mathbf{I} - \mathbf{K}_t \mathbf{H}_t) \bar{\mathbf{P}_{t}}
+	\mathbf{P}_{t}=&(\mathbf{I} - \mathbf{K}_t \mathbf{C}_t) \bar{\mathbf{P}_{t}}
 	\end{align}
 \end{itemize}
 \par
@@ -99,7 +99,7 @@ Założenia o~liniowych modelach dynamicznym oraz~pomiarowym są rzadko spełnio
 \boldsymbol{z}_t =& \boldsymbol{h}_t(\boldsymbol{x}_{t}) + \boldsymbol{r}_{t} \label{eq:NonlinearModel}
 \end{align}
 \par
-Model przedstawiony w~równaniu \ref{eq:NonlinearModel} uogólnia liniowy gaussowski model z~równania \ref{eq:KalmanModels}, wykorzystywany w~filtrze Kalmana. Funkcja $\boldsymbol{g}_t$ zastępuje macierze $\boldsymbol{A}_{t-1}$ oraz $\boldsymbol{B}_{t}$, natomiast $\boldsymbol{h}_t$ występuje w~miejsce macierzy $\boldsymbol{H}_t$. W~tym przypadku, przy dowolnych funkcjach $\boldsymbol{g}_t$ i~$\boldsymbol{h}_t$, otrzymywany rozkład nie jest już normalny. Wykonanie dokładnej aktualizacji estymaty stanu jest niemożliwe dla nieliniowych funkcji $\boldsymbol{g}_t$ i~$\boldsymbol{h}_t$, ponieważ algorytm filtru Bayesa z~równania \ref{eq:recurrentCalculations} nie posiada rozwiązania w~zamkniętej formie.
+Model przedstawiony w~równaniu \ref{eq:NonlinearModel} uogólnia liniowy gaussowski model z~równania \ref{eq:KalmanModels}, wykorzystywany w~filtrze Kalmana. Funkcja $\boldsymbol{g}_t$ zastępuje macierze $\boldsymbol{A}_{t-1}$ oraz $\boldsymbol{B}_{t}$, natomiast $\boldsymbol{h}_t$ występuje w~miejsce macierzy $\boldsymbol{C}_t$. W~tym przypadku, przy dowolnych funkcjach $\boldsymbol{g}_t$ i~$\boldsymbol{h}_t$, otrzymywany rozkład nie jest już normalny. Wykonanie dokładnej aktualizacji estymaty stanu jest niemożliwe dla nieliniowych funkcji $\boldsymbol{g}_t$ i~$\boldsymbol{h}_t$, ponieważ algorytm filtru Bayesa z~równania \ref{eq:recurrentCalculations} nie posiada rozwiązania w~zamkniętej formie.
 \par
 Możliwe jest jednak poszukiwanie aproksymacji prawdziwego rozkładu stanu systemu. Jednym z~pierwszych, podstawowych i~najczęściej używanych rozwiązań jest rozszerzony filtr Kalmana (ang. \textit{Extended Kalman Filter}, EKF). Algorytm ten również zakłada prostą reprezentację przekonania o~stanie systemu za~pomocą rozkładu normalnego, jednak w~tym wypadku przekonanie to jest tylko przybliżeniem.
 \par
@@ -107,7 +107,7 @@ Główną ideą rozszerzonego filtru Kalmana jest linearyzacja, która przybliż
 \par
 EKF wykorzystuje do linearyzacji metodę rozwinięcia Taylora pierwszego rzędu, która konstruuje liniowe przybliżenie funkcji poprzez jej wartość i~pochodną cząstkową (równanie \ref{eq:g_derivative}).
 \begin{equation} \label{eq:g_derivative}
-	\boldsymbol{g}_t'(\boldsymbol{u}_t, \boldsymbol{x}_{t-1}) := \frac{\partial \boldsymbol{g}_t(\boldsymbol{u}_t, \boldsymbol{x}_{t-1})}{\partial \boldsymbol{x}_{t-1}}
+\boldsymbol{g}_t'(\boldsymbol{u}_t, \boldsymbol{x}_{t-1}) := \frac{\partial \boldsymbol{g}_t(\boldsymbol{u}_t, \boldsymbol{x}_{t-1})}{\partial \boldsymbol{x}_{t-1}}
 \end{equation}
 Zarówno wartość funkcji $\boldsymbol{g}_t$, jak i~jej pochodna zależą od~wartości argumentu funkcji. W~rozszerzonym filtrze Kalmana jako argument wybiera się wartość stanu uznawaną za~najbardziej prawdopodobną, zatem funcja $\boldsymbol{g}_t$ jest aproksymowana wokół $\boldsymbol{m}_{t-1}$ (oraz $\boldsymbol{u}_t$):
 \begin{align} 
@@ -144,7 +144,7 @@ Podobnie jak w~przypadku zwykłego filtru Kalmana, algorytm EKF, przedstawiony w
 Bardziej ogólną sytuacją jest brak addytywności szumu w~modelach dynamicznym i~obserwacyjnym:
 \begin{align}
 	&\boldsymbol{x}_t = \boldsymbol{g}_t(\boldsymbol{u}_t, \boldsymbol{x}_{t-1}, \boldsymbol{q}_{t-1}) \nonumber \\
-	&\boldsymbol{z}_t = \boldsymbol{h}_t(\boldsymbol{x}_{t}, \boldsymbol{r}_{t})
+	&\boldsymbol{z}_t = \boldsymbol{h}_t(\boldsymbol{x}_{t}, \boldsymbol{r}_{t}) \label{eq:NonAdditiveNoiseModel}
 \end{align}
 W~takim przypadku możliwe jest obliczenie Jakobianów po~zmiennych stanu oraz składowych szumu, oznaczonych odpowiednio $\boldsymbol{G_x}_t$ i~$\boldsymbol{G_q}_t$ dla modelu dynamicznego, a~także $\boldsymbol{H_x}_t$ i~$\boldsymbol{H_r}_t$ dla obserwacji. Aproksymacja następuje, podobnie jak dla przypadku szumu addytywnego, wokół $\boldsymbol{m}_{t-1}$ i~$\boldsymbol{u}_{t}$ (macierze $\mathbf{G_x}_{t}$ i~$\mathbf{G_q}_{t}$) oraz $\bar{\boldsymbol{m}}_{t}$ (dla macierzy $\mathbf{H_x}_{t}$ i~$\mathbf{H_r}_{t}$), a~także wokół zerowych wartości składowych szumów. Algorytm rozszerzonego filtru Kalmana przyjmuje wówczas postać:
 \begin{itemize}
@@ -167,7 +167,7 @@ Algorytm rozszerzonego filtru Kalmana stał się najbardziej popularnym narzędz
 \par
 Ważnym ograniczeniem algorytmu EKF jest fakt, że korzysta on z~linearyzacji ewolucji stanu oraz pomiarów przy pomocy metody Taylora rozwinięcia funkcji w~szereg. Dokładność uzyskanej w~ten sposób aproksymacji zależy od~dwóch głównych czynników. Po~pierwsze, jest to stopień nieliniowości funkcji, która jest linearyzowana. Jeśli funkcja ta jest w~przybliżeniu liniowa, aproksymacja algorytmu będzie dobra, co przełoży się na~odwzorowanie wynikowego rozkładu z~wystarczającą dokładnością. Drugim czynnikiem wpływającym na~skuteczność takiego sposobu linearyzacji jest stopień niepewności estymaty stanu. Jeśli niepewność jest duża, gęstość rozkładu jest mniej skupiona wokół średniej, a~przez to bardziej wpływają na nią nieliniowości funkcji.
 \section{Filtr Kalmana Gaussa-Hermite'a} \label{GHKF}
-Innym sposobem otrzymania rozkładu normalnego jest metoda dopasowania rozkładów za~pomocą momentów. Jeśli zmienna losowa $\boldsymbol{x} \sim \mathcal{N}(\boldsymbol{m},\boldsymbol{P})$ jest transformowana w~liniowy sposób na~zmienną losową $\boldsymbol{y}=\boldsymbol{g}(x)+\boldsymbol{q}, \boldsymbol{q} \sim \mathcal{N}(\boldsymbol{0},\boldsymbol{Q})$, to gaussowska aproksymacja bazująca na~momentach rozkładu łącznego $\boldsymbol{x}$ i $\boldsymbol{y}$ jest dana wzorem:  
+Innym sposobem otrzymania rozkładu normalnego jest metoda dopasowania rozkładów za~pomocą momentów. Jeśli zmienna losowa $\boldsymbol{x} \sim \mathcal{N}(\boldsymbol{m},\boldsymbol{P})$ jest transformowana na~zmienną losową $\boldsymbol{y}=\boldsymbol{g}(x)+\boldsymbol{q}, \boldsymbol{q} \sim \mathcal{N}(\boldsymbol{0},\boldsymbol{Q})$, to gaussowska aproksymacja bazująca na~momentach rozkładu łącznego $\boldsymbol{x}$ i $\boldsymbol{y}$ jest dana wzorem:  
 \begin{equation} \label{eq:GaussianMomentMatchingAdditive}
 	\begin{bmatrix}
 	\boldsymbol{x} \\
@@ -217,8 +217,8 @@ W~ten sposób możliwe jest aproksymowanie wynikowych rozkładów pojawiających
 \begin{itemize}
 	\item[$\circ$] Krok predykcji:
 	\begin{align}\label{eq:GaussianAdditivePredictionStep}
-	&\bar{\boldsymbol{m}_{t}} = \int_{}^{}\boldsymbol{f}(\boldsymbol{x}_{t-1})\mathcal{N}(\boldsymbol{x}_{t-1}|\boldsymbol{m}_{t-1}, \boldsymbol{P}_{t-1}) \,d\boldsymbol{x}_{t-1} \nonumber \\
-	&\bar{\mathbf{P}_{t}} = \int_{}^{}(\boldsymbol{f}(\boldsymbol{x}_{t-1}) - \bar{ \boldsymbol{m}_{t}})(\boldsymbol{f}(\boldsymbol{x}_{t-1}) - \bar{ \boldsymbol{m}_{t}})^T \mathcal{N}(\boldsymbol{x}_{t-1}|\boldsymbol{m}_{t-1}, \boldsymbol{P}_{t-1}) \,d\boldsymbol{x}_{t-1} + \boldsymbol{Q}_{t-1}
+	&\bar{\boldsymbol{m}_{t}} = \int_{}^{}\boldsymbol{g}(\boldsymbol{u}_t, \boldsymbol{x}_{t-1})\mathcal{N}(\boldsymbol{x}_{t-1}|\boldsymbol{m}_{t-1}, \boldsymbol{P}_{t-1}) \,d\boldsymbol{x}_{t-1} \nonumber \\
+	&\bar{\mathbf{P}_{t}} = \int_{}^{}(\boldsymbol{g}(\boldsymbol{u}_t, \boldsymbol{x}_{t-1}) - \bar{ \boldsymbol{m}_{t}})(\boldsymbol{g}(\boldsymbol{u}_t, \boldsymbol{x}_{t-1}) - \bar{ \boldsymbol{m}_{t}})^T \mathcal{N}(\boldsymbol{x}_{t-1}|\boldsymbol{m}_{t-1}, \boldsymbol{P}_{t-1}) \,d\boldsymbol{x}_{t-1} + \boldsymbol{Q}_{t-1}
 	\end{align}
 	\item[$\circ$] Krok korekcji:
 	\begin{align} \label{eq:GaussianAdditiveCorrectionStep}
@@ -234,8 +234,8 @@ Możliwe jest rozszerzenie algorytmu na~przypadek szumu nieaddytywnego. Równani
 \begin{itemize}
 	\item[$\circ$] Krok predykcji:
 	\begin{align}\label{eq:GaussianNonAdditivePredictionStep}
-	\bar{\boldsymbol{m}_{t}} = &\int_{}^{}\boldsymbol{f}(\boldsymbol{x}_{t-1}, \boldsymbol{q}_{t-1})\mathcal{N}(\boldsymbol{x}_{t-1}|\boldsymbol{m}_{t-1}, \boldsymbol{P}_{t-1}) \mathcal{N}(\boldsymbol{q}_{t-1}|\boldsymbol{0}, \boldsymbol{Q}_{t-1}) \,d\boldsymbol{x}_{t-1} \,d\boldsymbol{q}_{t-1} \nonumber \\
-	\bar{\mathbf{P}_{t}} = &\int_{}^{}(\boldsymbol{f}(\boldsymbol{x}_{t-1}, \boldsymbol{q}_{t-1}) - \bar{ \boldsymbol{m}_{t}})(\boldsymbol{f}(\boldsymbol{x}_{t-1}, \boldsymbol{q}_{t-1}) - \bar{ \boldsymbol{m}_{t}})^T \nonumber \\ &\times \mathcal{N}(\boldsymbol{x}_{t-1}|\boldsymbol{m}_{t-1}, \boldsymbol{P}_{t-1})\mathcal{N}(\boldsymbol{q}_{t-1}|\boldsymbol{0}, \boldsymbol{Q}_{t-1}) \,d\boldsymbol{x}_{t-1} \,d\boldsymbol{q}_{t-1}
+	\bar{\boldsymbol{m}_{t}} = &\int_{}^{}\boldsymbol{g}(\boldsymbol{u}_t, \boldsymbol{x}_{t-1}, \boldsymbol{q}_{t-1})\mathcal{N}(\boldsymbol{x}_{t-1}|\boldsymbol{m}_{t-1}, \boldsymbol{P}_{t-1}) \mathcal{N}(\boldsymbol{q}_{t-1}|\boldsymbol{0}, \boldsymbol{Q}_{t-1}) \,d\boldsymbol{x}_{t-1} \,d\boldsymbol{q}_{t-1} \nonumber \\
+	\bar{\mathbf{P}_{t}} = &\int_{}^{}(\boldsymbol{g}(\boldsymbol{u}_t, \boldsymbol{x}_{t-1}, \boldsymbol{q}_{t-1}) - \bar{ \boldsymbol{m}_{t}})(\boldsymbol{g}(\boldsymbol{u}_t, \boldsymbol{x}_{t-1}, \boldsymbol{q}_{t-1}) - \bar{ \boldsymbol{m}_{t}})^T \nonumber \\ &\times \mathcal{N}(\boldsymbol{x}_{t-1}|\boldsymbol{m}_{t-1}, \boldsymbol{P}_{t-1})\mathcal{N}(\boldsymbol{q}_{t-1}|\boldsymbol{0}, \boldsymbol{Q}_{t-1}) \,d\boldsymbol{x}_{t-1} \,d\boldsymbol{q}_{t-1}
 	\end{align}
 	\item[$\circ$] Krok korekcji:
 	\begin{align} \label{eq:GaussianNonAdditiveCorrectionStep}
@@ -281,7 +281,7 @@ Dla~każdego punktu sigma $\xi_i$ można obliczyć odpowiadającą mu wagę $W_i
 \begin{equation}
 W_i = \frac{p!}{p^2[H_{p-1}(\xi_i)]^2}
 \end{equation}
-Całki z~niestandardową funkcją gęstości $\mathcal{N}(x|m, P)$ mogą być obliczone poprzez zwykłą zmianę zmiannej:
+Całki z~niestandardową funkcją gęstości $\mathcal{N}(x|m, P)$ mogą być obliczone poprzez zwykłą zmianę zmiennej:
 \begin{equation}
 \int g(x)\mathcal{N}(x|m,P)dx = \int g(P^{1/2}\xi + m)\mathcal{N}(\xi|0,1) d\xi
 \end{equation}
@@ -301,9 +301,9 @@ Całka otrzymana w~równianiu \ref{eq:MultidimentionalIntegralUnitGaussian} moż
 \begin{align}
 \int \boldsymbol{g}&(\boldsymbol{m} + \sqrt{\boldsymbol{P}}\boldsymbol{\xi})\mathcal{N}(\boldsymbol{x}|\boldsymbol{0},\boldsymbol{I})d\boldsymbol{\xi} \nonumber \\ = &\int \dots \int \boldsymbol{g}(\boldsymbol{m} + \sqrt{\boldsymbol{P}}\boldsymbol{\xi})\mathcal{N}(\xi_1, 0, 1) \times \dots \times \mathcal{N}(\xi_n, 0, 1) d\xi_1 \dots d\xi_n \nonumber \\ \approx & \sum_{i_1,\dots,i_n}^{}\boldsymbol{W}_{(i_1, \dots, i_n)} \boldsymbol{g}(\boldsymbol{m} + \sqrt{\boldsymbol{P}}\xi_{(i_1, \dots, i_n)} )
 \end{align}
-Węzły powstają jako iloczyn kartezjański jednowymiarowych punktów sigma, $\xi_{(i_1, \dots, i_n)}=\begin{pmatrix}
+W tym wypadku węzły powstają jako iloczyn kartezjański jednowymiarowych punktów sigma, $\xi_{(i_1, \dots, i_n)}=\begin{pmatrix}
 \xi_1 & \dots & \xi_n
-\end{pmatrix}^T$, natomiast wielowymiarowe wagi są~tworzone poprzez pomnożenie jednowymiarowych wag odpowiadających węzłom: $\boldsymbol{W}_{(i_1, \dots, i_n)} = \boldsymbol{W}_{i_1} \times \dots \times \boldsymbol{W}_{i_n}$. \\
+\end{pmatrix}^T$, natomiast wielowymiarowe wagi są~tworzone poprzez pomnożenie jednowymiarowych wag odpowiadających węzłom: $\boldsymbol{W}_{(i_1, \dots, i_n)} = \boldsymbol{W}_{i_1} \times \dots \times \boldsymbol{W}_{i_n}$.
 \par
 Całkowanie metodą Gaussa-Hermite-a jest dokładne dla jednomianów $x_{1}^{d_{1}} x_{2}^{d_{2}} \dots x_{n}^{d_{n}}$ i~ich dowolnej kombinacji liniowej, gdzie każda potęga $d_i \leq 2p-1$. Liczba węzłów (rozmiaru $n$) oraz wag potrzebnych do obliczenia całki $n$-wymiarowej przy zastosowaniu $p$ węzłów jednowymiarowych jest równa $p^n$, zatem złożoność aproksymacji Gaussa-Hermite-a rośnie bardzo szybko wraz ze~wzrostem wymiarowości i~liczby $p$.
 \par
@@ -312,43 +312,67 @@ Zastosowanie metody Gaussa-Hermite-a do~obliczenia całek z~równań \ref{eq:Gau
 	\item[$\circ$] Krok predykcji:
 	\begin{align}\label{eq:GHKFAdditivePrediction}
 	&\boldsymbol{\chi}^{(i_1, \dots, i_n)}_{t-1}=\boldsymbol{m}_{t-1}+\sqrt{\boldsymbol{P}_{t-1}}\boldsymbol{\xi}_{(i_1, \dots, i_n)} \nonumber \\
-	&\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t}=\boldsymbol{f}(\boldsymbol{\chi}^{(i_1, \dots, i_n)}_{t-1}) \nonumber \\
+	&\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t}=\boldsymbol{g}(\boldsymbol{u}_t, \boldsymbol{\chi}^{(i_1, \dots, i_n)}_{t-1}) \nonumber \\
 	&\bar{\boldsymbol{m}_t}=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} \hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} \nonumber \\
 	&\bar{\boldsymbol{P}_t}=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)}(\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}_t})(\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}_t})^T + \boldsymbol{Q}_{t-1}
 	\end{align}
 	\item[$\circ$] Krok korekcji:
 	\begin{align} \label{eq:GHKFAdditiveCorrection}
 	&\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} = \bar{\boldsymbol{m}}_{t} + \sqrt{\bar{\boldsymbol{P}}_{t}} \boldsymbol{\xi}_{(i_1, \dots, i_n)} \nonumber \\
-	&\hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} = \boldsymbol{h}(\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t}) \nonumber \\
-	&\boldsymbol{\mu}_t=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} \hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} \nonumber \\
-	&\boldsymbol{S}_t=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)}(\hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)(\hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)^T + \boldsymbol{R}_{t} \nonumber \\
-	&\boldsymbol{C}_t = \sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} (\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}}_t)(\hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)^T \nonumber \\
+	&\hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} = \boldsymbol{h}(\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t}) \nonumber \\
+	&\boldsymbol{\mu}_t=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} \hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} \nonumber \\
+	&\boldsymbol{S}_t=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)}(\hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)(\hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)^T + \boldsymbol{R}_{t} \nonumber \\
+	&\boldsymbol{C}_t = \sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} (\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}}_t)(\hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)^T \nonumber \\
 	&\boldsymbol{K}_t=\boldsymbol{C}_t\boldsymbol{S}_t^{-1} \nonumber \\
 	&\boldsymbol{P}_t=\bar{\mathbf{P}_{t}} - \boldsymbol{K}_t\boldsymbol{S}_t\boldsymbol{K}_t^T \nonumber \\
 	&\boldsymbol{m}_t = \bar{\boldsymbol{m}_t} + \boldsymbol{K}_t(\boldsymbol{z}_t - \boldsymbol{\mu}_t)
 	\end{align}
 \end{itemize}
-Filtr dla szumu nieaddytywnego (do zweryfikowania):
+Przypadek szumu nieaddytywnego (\ref{eq:NonAdditiveNoiseModel}) wymaga tworzenia węzłów $\boldsymbol{\xi}_{(i_1, \dots, i_n)}$ w~oparciu o~zwiększoną liczbę wymiarów (suma wymiarów zmiennych stanu i~wektora szumu $\boldsymbol{q}$). Zwiększeniu ulegnie również wymiarowość zmodyfikowanego wektora wartości średnich oraz macierzy kowariancji:
+\begin{equation} \label{eq:NonAdditive_m_t-1}
+\boldsymbol{m}'_{t-1}=
+\begin{bmatrix}
+\boldsymbol{m}_{t-1} \\
+\boldsymbol{0}
+\end{bmatrix} 
+\end{equation}
+\begin{equation} \label{eq:NonAdditive_P_t-1}
+\boldsymbol{P}'_{t-1}=
+\begin{bmatrix}
+\boldsymbol{P}_{t-1} & \boldsymbol{0} \\
+\boldsymbol{0} & \boldsymbol{Q}_{t-1}
+\end{bmatrix} 
+\end{equation}
+\begin{equation} \label{eq:NonAdditive_m_t}
+\bar{\boldsymbol{m}'}_{t}=
+\begin{bmatrix}
+\bar{\boldsymbol{m}}_{t} \\
+\boldsymbol{0}
+\end{bmatrix} 
+\end{equation}
+\begin{equation} \label{eq:NonAdditive_P_t}
+\bar{\boldsymbol{P}'}_{t}=
+\begin{bmatrix}
+\bar{\boldsymbol{P}}_{t} & \boldsymbol{0} \\
+\boldsymbol{0} & \boldsymbol{R}_{t}
+\end{bmatrix} 
+\end{equation}
+Stosując powyższe modyfikacje, filtr Kalmana Gaussa-Hermite'a dla szumu nieaddytywnego będzie wyglądał następująco:
 \begin{itemize}
 	\item[$\circ$] Krok predykcji:\\
-	$\boldsymbol{\xi}_{(i_1, \dots, i_n)}$ będzie tworzone na podstawie zwiększonej liczby wymiarów (suma wymiarów zmiennych stanu i~wektora szumu $\boldsymbol{q}$). $\boldsymbol{m}_{t-1}$ będzie miało także zwiększony wymiar, dla zmiennych szumu będą tam zera.
-	Macierz $\boldsymbol{P}_{t-1}$ będzie miała dołożoną na przekątnej macierz $\boldsymbol{Q}_{t-1}$, a~pozostałe miejsca macierzy (odpowiadające kowariancji zmiennych stanu i zmiennych szumu) będą uzupełnione zerami. Funkcja $\boldsymbol{f}$ będzie przyjmować współrzędne węzłów odpowiadające zmiennym stanu i szumom:
 	\begin{align}\label{eq:GHKFNonAdditivePrediction}
-	&\boldsymbol{\chi}^{(i_1, \dots, i_n)}_{t-1}=\boldsymbol{m}_{t-1}+\sqrt{\boldsymbol{P}_{t-1}}\boldsymbol{\xi}_{(i_1, \dots, i_n)} \nonumber \\
-	&\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t}=\boldsymbol{f}(\boldsymbol{\chi}^{(i_1, \dots, i_n)}_{t-1}) \nonumber \\
+	&\boldsymbol{\chi}^{(i_1, \dots, i_n)}_{t-1}=\boldsymbol{m}'_{t-1}+\sqrt{\boldsymbol{P}'_{t-1}}\boldsymbol{\xi}_{(i_1, \dots, i_n)} \nonumber \\
+	&\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t}=\boldsymbol{g}(\boldsymbol{u}_t,\boldsymbol{\chi}^{(i_1, \dots, i_n)}_{t-1}) \nonumber \\
 	&\bar{\boldsymbol{m}_t}=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} \hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} \nonumber \\
-	&\text{Nie będzie już dodawana macierz $\boldsymbol{Q}$:} \nonumber \\
 	&\bar{\boldsymbol{P}_t}=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)}(\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}_t})(\hat{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}_t})^T
 	\end{align}
 	\item[$\circ$] Krok korekcji:\\
-	Tutaj podobnie jak w kroku predykcji, $\boldsymbol{\xi}_{(i_1, \dots, i_n)}$ tworzone będzie na podstawie zwiększonej liczby wymiarów (suma wymiarów zmiennych stanu i~wektora szumu $\boldsymbol{r}$). $\bar{\boldsymbol{P}_t}$ będzie miało dołożoną macierz $\boldsymbol{R}_{t}$. $\bar{\boldsymbol{m}}_{t}$ będzie też uzupełnione zerami. Funkcja $\boldsymbol{h}$ przyjmie współrzędne węzłów odpowiadające i zmiennym stanu, i szumom:
-	\begin{align} \label{eq:GHKFNonAdditiveCorrection}
-	&\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} = \bar{\boldsymbol{m}}_{t} + \sqrt{\bar{\boldsymbol{P}}_{t}} \boldsymbol{\xi}_{(i_1, \dots, i_n)} \nonumber \\
-	&\hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} = \boldsymbol{h}(\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t}) \nonumber \\
-	&\boldsymbol{\mu}_t=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} \hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} \nonumber \\
-	&\text{Bez dodawania macierzy $\boldsymbol{R}$:} \nonumber \\
-	&\boldsymbol{S}_t=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)}(\hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)(\hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)^T \nonumber \\
-	&\boldsymbol{C}_t = \sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} (\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}}_t)(\hat{\boldsymbol{\Psi}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)^T \nonumber \\
+		\begin{align} \label{eq:GHKFNonAdditiveCorrection}
+	&\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} = \bar{\boldsymbol{m}'}_{t} + \sqrt{\bar{\boldsymbol{P}'}_{t}} \boldsymbol{\xi}_{(i_1, \dots, i_n)} \nonumber \\
+	&\hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} = \boldsymbol{h}(\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t}) \nonumber \\
+	&\boldsymbol{\mu}_t=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} \hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} \nonumber \\
+	&\boldsymbol{S}_t=\sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)}(\hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)(\hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)^T \nonumber \\
+	&\boldsymbol{C}_t = \sum_{i_1,\dots,i_n} \boldsymbol{W}_{(i_1, \dots, i_n)} (\bar{\boldsymbol{\chi}}^{(i_1, \dots, i_n)}_{t} - \bar{\boldsymbol{m}}_t)(\hat{\boldsymbol{\mathcal{Y}}}^{(i_1, \dots, i_n)}_{t} - \boldsymbol{\mu}_t)^T \nonumber \\
 	&\boldsymbol{K}_t=\boldsymbol{C}_t\boldsymbol{S}_t^{-1} \nonumber \\
 	&\boldsymbol{P}_t=\bar{\mathbf{P}_{t}} - \boldsymbol{K}_t\boldsymbol{S}_t\boldsymbol{K}_t^T \nonumber \\
 	&\boldsymbol{m}_t = \bar{\boldsymbol{m}_t} + \boldsymbol{K}_t(\boldsymbol{z}_t - \boldsymbol{\mu}_t)
