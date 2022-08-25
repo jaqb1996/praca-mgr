@@ -19,7 +19,6 @@
 \usepackage{gensymb}
 
 % --- < bibliografia > ---
-
 \usepackage[
 style=numeric,
 sorting=none,
@@ -44,7 +43,8 @@ backend=bibtex
 
 \usepackage{csquotes}
 % Ponieważ `csquotes` nie posiada polskiego stylu, można skorzystać z mocno zbliżonego stylu chorwackiego.
-\DeclareQuoteAlias{croatian}{polish}
+%\DeclareQuoteAlias{croatian}{polish}
+
 
 \addbibresource{bibliografia.bib}
 
@@ -209,13 +209,9 @@ backend=bibtex
 
 \include{wprowadzenie}
 \include{algorytmy}
-%\include{rozdzial3}
-%\include{rozdzial1}
-%\include{rozdzial2}
-%\include{rozdzial4}
-%\include{tests}
-
-
+\include{eksperymenty_numeryczne}
+\include{eksperyment_wahadlo}
+\include{podsumowanie}
 
 % itd.
 % \appendix
@@ -224,5 +220,6 @@ backend=bibtex
 % itd.
 
 \printbibliography
+
 
 \end{document}
