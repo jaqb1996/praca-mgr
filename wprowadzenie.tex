@@ -1,4 +1,22 @@
 \chapter{Wprowadzenie}
 %Wprowadzenie do problemu filtracji
-\label{cha:wprowadzenie}
-Wstęp w \cite{Crisan}, zastosowania filtracji w \cite[]{Sarka}
+\label{cha:introduction}
+Od~połowy dwudziestego wieku problem filtracji stochastycznej przyciąga uwagę wielu matematyków, inżynierów, statystyków i~informatyków. Prowadzone są poszukiwania rozwiązań dających dokładniejsze wyniki oraz możliwych do~zastosowania w~większej liczbie aplikacji. Rozważania nad problemem zrodziły zaskakująco dużą liczbę technik matematycznych wykorzystywanych do~jego rozwiązania, a~także miały znaczący udział w~stworzeniu zupełnie nowych gałęzi nauki \cite{Crisan}. \par
+Problemy, w~których występuje zagadnienie filtracji, są powszechnie spotykane w~praktyce inżynierskiej oraz~naukowej. Do~przykładów można zaliczyć między innymi: \cite[2]{Sarka}
+\begin{itemize}
+	\item System nawigacji satelitarnej GPS (ang. \textit{Global Positioning System})
+	\item Problem śledzenia obiektów np. samochodów, ludzi, satelit
+	\item Nawigacja przy użyciu czujników inercyjnych
+	\item Metody obrazowania pracy mózgu, takie jak elektroencefalografia (EEG), magnetoencefalografia (MEG) czy funkcjonalny rezonans magnetyczny (fMRI)
+	\item Rozprzestrzenianie się chorób zakaźnych
+	
+\end{itemize} \par
+Do niedawna algorytm rozszerzonego filtru Kalmana (ang. \textit{Extended Kalman Filter}, EKF) był naturalnym wyborem projektantów zajmujących się powyższymi problemami. Wraz z~pojawieniem się bardziej zaawansowanych algorytmów filtracji, takich jak \textit{Unscented Kalman Filter} (UKF) zrodziła się potrzeba porównania działania algorytmów dla różnych zastosowań. Dalsze badania zaowocowały powstaniem ogólnego schematu filtracji zwanego filtrem Gaussa, umożliwiającego wykorzystanie dobrze znanych i~niezawodnych narzędzi matematycznych w~problemie filtracji \cite{Ito}. Jednym z~algorytmów wykorzystujących wspomniany schemat jest filtr Kalmana Gaussa-Hermite'a (ang. \textit{Gauss-Hermite Kalman Filter}, GHKF). Algorytm UKF, będący główną alternatywą dla EKF, został dokładnie przebadany i~zyskał uznanie naukowej społeczności. Liczba badań poświęconych algorytmowi GHKF jest zdecydowanie mniejsza.\\ \\
+
+\section{Cele pracy}
+\label{sec:thesis_goals}
+Celem pracy była implementacja algorytmu filtra Kalmana Gaussa-Hermite'a oraz porównanie jego działania z~rozszerzonym filtrem Kalmana dla kilku silnie nieliniowych systemów. Obok testów numerycznych, założeniem pracy było przeprowadzenie badań na~rzeczywistym obiekcie - wahadle reakcyjnym. Pierwszym krokiem prac było przeprowadzenie analizy literatury naukowej dotyczącej problemu filtracji, ze~szczególnym uwzględnieniem algorytmu Kalmana Gaussa-Hermite'a. W~drugim etapie prac należało wykonać implementację algorytmu w~środowisku umożliwiającym sprawne wykonywanie obliczeń macierzowych występujących w~algorytmie. Kolejnym etapem prac było porównanie działania algorytmów GHKF i~EKF dla~występujących w~literaturze systemów teoretycznych służących ewaluacji algorytmów w~rozważanym problemie, a~także dla obecnych w~badaniach problemów praktycznych. Porównywana miała być zarówno dokładność estymacji, jak~i~czas potrzebny na~wykonanie obliczeń. Kolejny etap zakładał zaprojektowanie oraz przeprowadzenie eksperymentu z~wykorzystaniem wahadła reakcyjnego. Analiza zebranych danych oraz wyciągnięcie wniosków stanowiły ostatni etap działań.
+
+\section{Zawartość pracy}
+\label{sec:thesis_content}
+W~rozdziale \ref{cha:algorithms} przedstawiono algorytmy filtru Bayesa, Kalmana, rozszerzonego filtru Kalmana, ogólnego schematu filtru Gaussa oraz filtru Kalmana Gaussa-Hermite'a. Rozdział \ref{cha:numerical_experiments} opisuje przeprowadzone testy numeryczne. W~rozdziale \ref{cha:pendulum} opisano eksperyment z~wykorzystaniem wahadła reakcyjnego, natomiast ostatni rozdział zawiera podsumowanie oraz proponowane dalsze kierunki prac.
