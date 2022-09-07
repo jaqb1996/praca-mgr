@@ -103,7 +103,7 @@ Założenia o~liniowych modelach dynamicznym oraz~pomiarowym są rzadko spełnio
 \par
 Model przedstawiony w~równaniu \ref{eq:NonlinearModel} uogólnia liniowy gaussowski model z~równania \ref{eq:KalmanModels}, wykorzystywany w~filtrze Kalmana. Funkcja $\boldsymbol{g}_t$ zastępuje macierze $\boldsymbol{A}_{t-1}$ oraz $\boldsymbol{B}_{t}$, natomiast $\boldsymbol{h}_t$ występuje w~miejsce macierzy $\boldsymbol{C}_t$. W~tym przypadku, przy dowolnych funkcjach $\boldsymbol{g}_t$ i~$\boldsymbol{h}_t$, otrzymywany rozkład nie jest już normalny. Wykonanie dokładnej aktualizacji estymaty stanu jest niemożliwe dla nieliniowych funkcji $\boldsymbol{g}_t$ i~$\boldsymbol{h}_t$, ponieważ algorytm filtru Bayesa z~równania \ref{eq:recurrentCalculations} nie posiada rozwiązania w~zamkniętej formie.
 \par
-Możliwe jest jednak poszukiwanie aproksymacji prawdziwego rozkładu stanu systemu. Jednym z~pierwszych, podstawowych i~najczęściej używanych rozwiązań jest rozszerzony filtr Kalmana. Algorytm ten również zakłada prostą reprezentację przekonania o~stanie systemu za~pomocą rozkładu normalnego, jednak w~tym wypadku przekonanie to jest tylko przybliżeniem.
+Możliwe jest jednak poszukiwanie aproksymacji prawdziwego rozkładu stanu systemu. Jednym z~pierwszych, podstawowych i~najczęściej używanych rozwiązań jest rozszerzony filtr Kalmana. Algorytm ten również zakłada prostą reprezentację przekonania o~stanie systemu za~pomocą rozkładu normalnego, jednak w~tym wypadku reprezentacja ta jest tylko przybliżeniem.
 \par
 Główną ideą rozszerzonego filtru Kalmana jest linearyzacja, która przybliża $\boldsymbol{g}_t$ funkcją liniową styczną do~$\boldsymbol{g}_t$ w~miejscu średniej wartości rozkładu Gaussa. Poprzez projekcję rozkładu normalnego przez taką liniową aproksymację, wynikowy rozkład staje się normalny. W~tym momencie cały mechanizm aktualizacji przekonania staje się taki sam jak w przypadku filtru Kalmana. Ten sam sposób może być zastosowany w~przypadku funkcji $\boldsymbol{h}_t$, zachowując w~ten sposób gaussowską naturę rozkładu.
 \par
@@ -250,7 +250,7 @@ Możliwe jest rozszerzenie algorytmu na~przypadek szumu nieaddytywnego. Równani
 	\end{align}
 \end{itemize}
 \par
-Powyższe ogólne rówania filtru Gaussa są~raczej teoretycznymi konstrukcjami, a~nie praktycznymi algorytmami filtracji. Należy przyjąć pewną metodę rozwiązywania potrzebnych całek występujących w~formie \ref{eq:GaussianIntegral}, aby uzyskać funkcjonalny algorytm.
+Powyższe ogólne równania filtru Gaussa są~raczej teoretycznymi konstrukcjami, a~nie praktycznymi algorytmami filtracji. Należy przyjąć pewną metodę rozwiązywania potrzebnych całek występujących w~formie \ref{eq:GaussianIntegral}, aby uzyskać funkcjonalny algorytm.
 \begin{align} \label{eq:GaussianIntegral}
 	\int \boldsymbol{g}&(\boldsymbol{x})\mathcal{N}(\boldsymbol{x}|\boldsymbol{m},\boldsymbol{P})) d\boldsymbol{x}
 	\nonumber \\

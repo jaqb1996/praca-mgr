@@ -9,7 +9,7 @@ Model systemu wyglądał następująco:
 	&\left\{ 
 	\begin{array}{l}
 	x_1(t+1) = 0.8x_1(t) + x_1(t)x_2(t) + 0.1 + 0.01w_1(t) \\
-	x_2(t+1) = 1.5x_2(t) - x_1(t)x_2(t) + 0.1 + 0.01w_1(t) \\
+	x_2(t+1) = 1.5x_2(t) - x_1(t)x_2(t) + 0.1 + 0.01w_2(t) \\
 	\end{array}
 	\right.\nonumber \\
 	&\left\{ 
@@ -20,7 +20,7 @@ Model systemu wyglądał następująco:
 	\right.
 \end{align}
 gdzie szum procesu oraz szum pomiaru są nieskorelowanymi białymi szumami gaussowskimi z~następującymi rozkładami: $\boldsymbol{w}(t) \sim \mathcal{N}(\boldsymbol{0}, \boldsymbol{Q})$, $\boldsymbol{v}(t) \sim \mathcal{N}(\boldsymbol{0}, \boldsymbol{R})$, $\boldsymbol{Q}=diag(0.1, 0.2)$, $\boldsymbol{R}=diag(0.1, 0.2)$; początkowy stan systemu to: $\boldsymbol{x}(0|0) = [1,1]^T$, $\boldsymbol{P}(0|0) = \boldsymbol{I}_{2 \times 2}$.\\ 
-Jako miarę skuteczności filtracji użyto pierwiastka z~błędu średniokwadratowego (ang. \textit{root-mean-square error}, RMSE), który dla $T$ estymat $\hat{x}_t$ rzeczywistych wartości $x_t$ jest definiowany następująco:
+Jako miarę skuteczności filtracji użyto pierwiastka z~błędu średniokwadratowego (ang. \textit{root-mean-square error}, RMSE), który dla $T$ estymat $\hat{x}_t$, oszacowujących rzeczywiste wartości $x_t$, jest definiowany następująco:
 \begin{align}\label{eq:rmse}
 \text{RMSE} = \sqrt{\frac{\sum_{t=1}^{T}(\hat{x}_t - x_t)^2}{T}}
 \end{align}
@@ -59,8 +59,8 @@ W~celu dokładniejszego zbadania, jak nieliniowość funkcji wpływa na~działan
 x(t+1) &= x(t) + a\sin(2x(t)) + w(t) \nonumber \\
 z(t+1) &= x(t+1) + v(t+1)
 \end{align}
-$a\in{0..20}$, $w(t) \sim \mathcal{N}(0, Q)$, $v(t) \sim \mathcal{N}(0, R)$. Model procesu staje się bardziej nieliniowy dla większych wartości parametru $a$ (Rysunek \ref{fig:rmse_test_functions}). \par
-Dla każdej wartości parametru $a$ wykonano 100 iteracji algorytmów rozszerzonego filtru Kalmana oraz filtru Kalmana Gaussa-Hermite'a stopnia 2, 3 i 5. Każda iteracja zakładała wykonanie 100 kroków predykcji-korekcji przy zastosowaniu danego algorytmu, którego działanie było oceniane za~pomocą wartości wskaźnika RMSE. Zbadano również średni czas potrzebny na~wykonanie zadania dla poszczególnych filtrów. W~celu uzyskania takich samych wartości z~generatora liczb losowych dla każdego filtra, przed uruchomieniem symulacji generator był inicjowany tym samym zarodkiem. Przyjęto następujące wartości parametrów symulacji i~filtracji: $Q=10$, $R=10$, $x(0|0)=1$, $P(0|0)=1$. \par
+$a\in{0..20}$, $w(t) \sim \mathcal{N}(0, Q)$, $v(t) \sim \mathcal{N}(0, R)$. Model procesu stawał się bardziej nieliniowy dla większych wartości parametru $a$ (Rysunek \ref{fig:rmse_test_functions}). \par
+Dla każdej wartości parametru $a$ wykonano 100 iteracji algorytmów rozszerzonego filtru Kalmana oraz filtru Kalmana Gaussa-Hermite'a stopnia drugiego, trzeciego i~piątego. Każda iteracja zakładała wykonanie 100 kroków predykcji-korekcji przy zastosowaniu danego algorytmu, którego działanie było oceniane za~pomocą wartości wskaźnika RMSE. Zbadano również średni czas potrzebny na~wykonanie zadania dla poszczególnych filtrów. W~celu uzyskania takich samych wartości z~generatora liczb losowych dla każdego filtra, przed uruchomieniem symulacji generator był inicjowany tym samym zarodkiem. Przyjęto następujące wartości parametrów symulacji i~filtracji: $Q=10$, $R=10$, $x(0|0)=1$, $P(0|0)=1$. \par
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.5\linewidth]{rmse_test_functions.jpg}
@@ -94,7 +94,7 @@ Na~rysunku \ref{fig:rmse_test_results} pokazano średnie wartości RMSE dla ró�
 
 \subsection{Śledzenie pocisku balistycznego}
 \label{subsec:ballistic_target_tracking}
-Problem śledzenia pocisku balistycznego jest kluczowy dla skutecznego przechwycania pocisku, co ma duże znaczenie dla kwestii bezpieczeństwa i~obronności. Rozważany jest scenariusz, kiedy pocisk balistyczny ponownie wchodzi w~atmosferę Ziemi po~przemierzeniu dużego dystansu, jego prędkość jest bardzo duża, a~czas do uderzenia w ziemię stosunkowo niewielki. Problem ten jest uznawany za trudny ze względu na: szum pomiaru, nieliniowości w~modelu procesu lub pomiaru oraz brak informacji o~kształcie i~wielkości pocisku. \cite{MisslieTracking1}\cite{MissileTracking2}.
+Problem śledzenia pocisku balistycznego jest kluczowy dla skutecznego przechwycania pocisku, co ma duże znaczenie dla kwestii bezpieczeństwa i~obronności. Rozważany był scenariusz, kiedy pocisk balistyczny ponownie wchodzi w~atmosferę Ziemi po~przemierzeniu dużego dystansu, jego prędkość jest bardzo duża, a~czas do uderzenia w ziemię stosunkowo niewielki. Problem ten jest uznawany za trudny ze względu na: szum pomiaru, nieliniowości w~modelu procesu lub pomiaru oraz brak informacji o~kształcie i~wielkości pocisku. \cite{MisslieTracking1}\cite{MissileTracking2}.
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.8\linewidth]{missile_tracking_illustration.jpg}
@@ -127,7 +127,7 @@ Ze~względu na~siłę oporu powietrza, dynamika obiektu jest silnie nieliniowa. 
 	\end{bmatrix}
 \end{equation}
 gdzie parametry $q_3$ (w~$m^2/s^3$) oraz $q_4$ (w~$kg^2m^{-2}s^{-5}$) należy dostroić dla konkretnego systemu. \par
-Na rysunku \ref{fig:ballistic_typical_trajectories} przedstawiono typowe przebiegi wysokości oraz prędkości pocisku niezakłócone szumem procesu ($q_3=q_4=0$). Przez kilka początkowych sekund prędkość nie zmienia się znacząco. Potem jednak gęstość powietrza zwiększa się i~siła oporu spowalnia spadający obiekt. W~końcu pocisk uzyskuje stałą prędkość, kiedy siła grawitacji i~opór powietrza równoważą się. Początkowe wartości wysokości, prędkości i~współczynnika balistycznego ustawiono odpowiednio na~$60960\,m$, $3048\,m/s$ i~$19161\,kg/ms^2$. Czas próbkowania $T$ wynosił $0.1\,s$.\par
+Na rysunku \ref{fig:ballistic_typical_trajectories} przedstawiono typowe przebiegi wysokości oraz prędkości pocisku niezakłócone szumem procesu ($q_3=q_4=0$). Przez kilka początkowych sekund prędkość nie zmienia się znacząco. Potem jednak gęstość powietrza zwiększa się i~siła oporu spowalnia spadający obiekt. W~końcu pocisk uzyskuje stałą prędkość, kiedy siła grawitacji i~opór powietrza równoważą się. Początkowe wartości wysokości, prędkości i~współczynnika balistycznego ustawiono odpowiednio na~$60960\,m$, $3048\,m/s$ i~$19161\,kg/ms^2$. Okres próbkowania $T$ wynosił $0.1\,s$.\par
 \begin{figure}
 	\centering
 	\begin{subfigure}[b]{0.4\linewidth}
@@ -149,7 +149,7 @@ z(t+1) = \boldsymbol{H}\boldsymbol{x}(t+1) + \nu(t+1)
 \end{equation}
 gdzie $\boldsymbol{H} = \begin{bmatrix}
 1 & 0 & 0
-\end{bmatrix}$ \par
+\end{bmatrix}$. \par
 Powyższy problem został rozwiązany przy użyciu rozszerzonego filtru Kalmana oraz filtru Kalmana Gaussa-Hermite'a. Parametry szumu procesu dla filtrów oraz symulacji ustalono podobnie jak w~\cite{MisslieTracking1} na $q_3=q_4=5$. Wartość wariancji szumu pomiarowego przyjęto jako $R=200^2$. Na~rysunku \ref{fig:ballistic_errors} przedstawiono różnice pomiędzy prawdziwymi wartościami wysokości pocisku, prędkości oraz współczynnika balistycznego, a~estymatami wyznaczonymi przez filtry. Oba filtry dobrze poradziły sobie z~postawionym problemem. Błędy w~oszacowaniu wysokości pocisku wynosiły kilkadziesiąt metrów przez większą część trwania symulacji, równocześnie nie przekraczając $200\,m$. Po~początkowej rozbieżności w~estymacie prędkości sięgającej $180\, m/s$, błąd w~oszacowaniu zmalał i~do~końca symulacji utrzymywał się na niskim poziomie. Estymowane wartości współczynnika balistycznego również były zbliżone do~prawdziwych. Wyniki otrzymywane przy użyciu obu filtrów są niemal identyczne. Dla opisanego problemu śledzenia pocisku balistycznego, linearyzacja funkcji występującej w~modelu procesu, wykorzystywana przez rozszerzony filtr Kalmana, jest dokładna.
 \begin{figure}
 	\centering
